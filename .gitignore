@@ -589,3 +589,12 @@ FodyWeavers.xsd
 
 
 .vscode/
+
+# Alembic
+alembic/versions/*.pyc
+alembic/versions/__pycache__/
+alembic/__pycache__/
+*.pyc
+__pycache__/
+
+*.yaml
