@@ -10,4 +10,4 @@ class RefreshRoute(BaseRoute):
     def endpoint(self):
         ...
 
-refresh_route = RefreshRoute()    
+refresh_api_route = RefreshRoute()    

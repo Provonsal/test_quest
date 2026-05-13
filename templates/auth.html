@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация и Вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab.active {
+            color: #667eea;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group input.error {
+            border-color: #ff4757;
+            animation: shake 0.3s ease;
+        }
+
+        .name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error-message {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Вход</button>
+            <button class="tab" onclick="switchTab('register')">Регистрация</button>
+        </div>
+
+        <!-- Форма входа -->
+        <form id="loginForm" class="form active" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required placeholder="Введите email">
+            </div>
+            <div class="input-group">
+                <label for="loginPassword">Пароль</label>
+                <input type="password" id="loginPassword" required placeholder="Введите пароль">
+            </div>
+            <button type="submit">Войти</button>
+        </form>
+
+        <!-- Форма регистрации -->
+        <form id="registerForm" class="form" onsubmit="handleRegister(event)">
+            <div class="input-group">
+                <label for="registerLastName">Фамилия</label>
+                <input type="text" id="registerLastName" required placeholder="Введите фамилию">
+            </div>
+            
+            <div class="name-row">
+                <div class="input-group">
+                    <label for="registerFirstName">Имя</label>
+                    <input type="text" id="registerFirstName" required placeholder="Введите имя">
+                </div>
+                <div class="input-group">
+                    <label for="registerMiddleName">Отчество</label>
+                    <input type="text" id="registerMiddleName" placeholder="При наличии">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" required placeholder="Введите email">
+            </div>
+            <div class="input-group">
+                <label for="registerPassword">Пароль</label>
+                <input type="password" id="registerPassword" required placeholder="Придумайте пароль">
+            </div>
+            <div class="input-group">
+                <label for="registerConfirmPassword">Подтвердите пароль</label>
+                <input type="password" id="registerConfirmPassword" required placeholder="Повторите пароль">
+            </div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Переключение вкладок
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab');
+            const message = document.getElementById('message');
+
+            // Скрываем сообщение
+            message.className = 'message';
+            message.style.display = 'none';
+
+            // Переключаем активную вкладку
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+            } else {
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // Показать сообщение
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+            
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+
+        // Валидация email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Валидация имени (только буквы и пробелы)
+        function validateName(name) {
+            const re = /^[а-яёА-ЯЁa-zA-Z\s-]+$/;
+            return re.test(name);
+        }
+
+        // Обработка входа
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('loginEmail');
+            const password = document.getElementById('loginPassword');
+            let isValid = true;
+
+            // Сброс ошибок
+            email.classList.remove('error');
+            password.classList.remove('error');
+
+            // Валидация
+            if (!validateEmail(email.value)) {
+                email.classList.add('error');
+                showMessage('Введите корректный email', 'error-message');
+                isValid = false;
+            }
+
+            if (password.value.length < 6) {
+                password.classList.add('error');
+                showMessage('Пароль должен содержать минимум 6 символов', 'error-message');
+                isValid = false;
+            }
+
+            if (isValid) {
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email.value,
+                            password: password.value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showMessage('Вход выполнен успешно!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/user/profile';
+                        }, 1000);
+                    } else {
+                        showMessage(data.detail || 'Ошибка входа', 'error-message');
+                    }
+                } catch (error) {
+                    showMessage('Ошибка соединения с сервером', 'error-message');
+                }
+            }
+        }
+
+        // Обработка регистрации
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const lastName = document.getElementById('registerLastName');
+            const firstName = document.getElementById('registerFirstName');
+            const middleName = document.getElementById('registerMiddleName');
+            const email = document.getElementById('registerEmail');
+            const password = document.getElementById('registerPassword');
+            const confirmPassword = document.getElementById('registerConfirmPassword');
+            let isValid = true;
+
+            // Сброс ошибок
+            [lastName, firstName, middleName, email, password, confirmPassword].forEach(input => {
+                if (input) input.classList.remove('error');
+            });
+
+            // Валидация фамилии
+            if (lastName.value.length < 2) {
+                lastName.classList.add('error');
+                showMessage('Фамилия должна содержать минимум 2 символа', 'error-message');
+                isValid = false;
+            } else if (!validateName(lastName.value)) {
+                lastName.classList.add('error');
+                showMessage('Фамилия должна содержать только буквы', 'error-message');
+                isValid = false;
+            }
+
+            // Валидация имени
+            if (firstName.value.length < 2) {
+                firstName.classList.add('error');
+                showMessage('Имя должно содержать минимум 2 символа', 'error-message');
+                isValid = false;
+            } else if (!validateName(firstName.value)) {
+                firstName.classList.add('error');
+                showMessage('Имя должно содержать только буквы', 'error-message');
+                isValid = false;
+            }
+
+            // Валидация отчества (необязательное поле)
+            if (middleName.value && !validateName(middleName.value)) {
+                middleName.classList.add('error');
+                showMessage('Отчество должно содержать только буквы', 'error-message');
+                isValid = false;
+            }
+
+            // Валидация email
+            if (!validateEmail(email.value)) {
+                email.classList.add('error');
+                showMessage('Введите корректный email', 'error-message');
+                isValid = false;
+            }
+
+            // Валидация пароля
+            if (password.value.length < 6) {
+                password.classList.add('error');
+                showMessage('Пароль должен содержать минимум 6 символов', 'error-message');
+                isValid = false;
+            }
+
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('error');
+                showMessage('Пароли не совпадают', 'error-message');
+                isValid = false;
+            }
+
+            if (isValid) {
+                try {
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            last_name: lastName.value,
+                            first_name: firstName.value,
+                            middle_name: middleName.value || null,
+                            email: email.value,
+                            password: password.value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showMessage('Регистрация успешна!', 'success');
+                        // Очищаем форму
+                        document.getElementById('registerForm').reset();
+                        setTimeout(() => {
+                            switchTab('login');
+                        }, 1000);
+                    } else {
+                        showMessage(data.detail || 'Ошибка регистрации', 'error-message');
+                    }
+                } catch (error) {
+                    showMessage('Ошибка соединения с сервером', 'error-message');
+                }
+            }
+        }
+
+        // Очистка ошибок при вводе
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+            });
+        });
+
+        // Автоматическая капитализация первой буквы для ФИО
+        document.querySelectorAll('#registerLastName, #registerFirstName, #registerMiddleName').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
