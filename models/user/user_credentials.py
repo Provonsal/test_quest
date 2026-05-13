@@ -20,7 +20,7 @@ class UserCredentials(Base):
     id = Column(UUID(as_uuid=True), ForeignKey('users.id'), primary_key=True)
     salt = Column(BYTEA(16), nullable=False)
     password_hash = Column(BYTEA(32), nullable=False)
-    algorithm = Column(String(16), nullable=False, index=True)
+    algorithm = Column(String(16), default="sha256", nullable=False, index=True)
     
     # Связи
     users = relationship("User", back_populates="user_credentials")
@@ -93,10 +93,13 @@ class UserCredentials(Base):
         
         data = {
             'id': self.id,
-            'role': self.role.to_dict() if self.role else None,
-            'created_at': self.created_at.isoformat() if self.created_at else None, # pyright: ignore[reportGeneralTypeIssues]
-            'is_active': self.is_active
+            'salt': self.salt,
+            'password_hash': self.password_hash,
+            'algorithm': self.algorithm
         }
+
+        if not_none:
+            data = self.__remove_none_values(data)
         
         return data
     
