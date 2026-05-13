@@ -1,6 +1,6 @@
 from .put import change_role_route, change_user_role_route
 from .get import profile_route, roles_route
-from admin_router import router
+from .admin_router import router
 
 
 router.add_api_route(change_role_route.path, change_role_route.endpoint, methods=change_role_route.methods_type)

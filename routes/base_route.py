@@ -13,9 +13,9 @@ class BaseRoute(Protocol):
     
     @methods_type.setter
     def methods_type(self, *v: str):
-        if self.__methods_types is None:
+        if getattr(self, "__methods_types", None) is None:
             self.__methods_types = [*v,]
-        else:
+        elif self.__methods_types is not None:
             for method in v:
                 self.__methods_types.append(method)
 

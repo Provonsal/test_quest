@@ -13,10 +13,10 @@ class User(Base):
     """
     __tablename__ = 'users'
     
-    id = Column(UUID, primary_key=True, default=uuid4)
-    role_id = Column(Integer, ForeignKey('roles.id', ondelete='SET NULL'), nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    role_id = Column(UUID(as_uuid=True), ForeignKey('roles.id', ondelete='SET NULL'), nullable=False)
     email = Column(String(60), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     
     # Связи

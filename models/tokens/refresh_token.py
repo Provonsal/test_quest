@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from sqlalchemy.orm import relationship
 from sqlalchemy import BINARY, UUID, Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql.types import BYTEA
 
 from models.base_model import Base
 
@@ -14,11 +15,11 @@ class RefreshToken(Base):
     __tablename__ = 'refresh_tokens'
     
     id = Column(ForeignKey('users.id'), primary_key=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     expire_date = Column(Integer, nullable=False)
     revoked = Column(Boolean, nullable=False)
-    token_hash = Column(BINARY(32), nullable=False)
-    family_id = Column(UUID, nullable=False, default=uuid4)
+    token_hash = Column(BYTEA(32), nullable=False)
+    family_id = Column(UUID(as_uuid=True), nullable=False, default=uuid4)
     
     # Связи
     users = relationship("User", back_populates="refresh_tokens")

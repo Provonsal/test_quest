@@ -10,7 +10,7 @@ from models import *
 
 
 
-URL_DATABASE = DATABASE_URL = "sqlite+aiosqlite:///database.db"
+URL_DATABASE = DATABASE_URL = "postgresql+asyncpg://Provonsal:vkijlonmssf@127.0.0.1:5432/postgres"
 
 engine = create_async_engine(URL_DATABASE, echo=False)
 
@@ -24,7 +24,8 @@ async def init_models():
     
     async with engine.begin() as conn:
         #await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+        #await conn.run_sync(Base.metadata.create_all)
+        ...
 
 
 async def get_session():

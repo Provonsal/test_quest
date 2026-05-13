@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from sqlalchemy.orm import relationship
 from sqlalchemy import BINARY, UUID, Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql.types import BYTEA
 
 from models.base_model import Base
 
@@ -13,10 +14,10 @@ class UserCredentials(Base):
     """
     __tablename__ = 'user_credentials'
     
-    id = Column(ForeignKey('users.id'), primary_key=True)
-    salt = Column(BINARY(16), nullable=False)
-    password_hash = Column(BINARY(32), nullable=False)
-    algorithm = Column(String(16), nullable=False, unique=True, index=True)
+    id = Column(UUID(as_uuid=True), ForeignKey('users.id'), primary_key=True)
+    salt = Column(BYTEA(16), nullable=False)
+    password_hash = Column(BYTEA(32), nullable=False)
+    algorithm = Column(String(16), nullable=False, index=True)
     
     # Связи
     users = relationship("User", back_populates="user_credentials")
