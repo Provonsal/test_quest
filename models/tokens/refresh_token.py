@@ -14,7 +14,7 @@ class RefreshToken(Base):
     """
     __tablename__ = 'refresh_tokens'
     
-    id = Column(ForeignKey('users.id'), primary_key=True)
+    id = Column(UUID(as_uuid=True), ForeignKey('users.id'), primary_key=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     expire_date = Column(Integer, nullable=False)
     revoked = Column(Boolean, nullable=False)

@@ -11,12 +11,12 @@ class Role(Base):
     """
     __tablename__ = 'roles'
     
-    id = Column(UUID, primary_key=True, default=uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name = Column(String(50), nullable=False, unique=True)
     level = Column(Text, nullable=True)
     
     # Связи: Одна роль может быть у МНОГИХ пользователей
-    users = relationship("User", back_populates="role", lazy="select")
+    users = relationship("User", back_populates="role")
     
     def __repr__(self):
         return f"<Role(id={self.id}, name='{self.name}')>"
