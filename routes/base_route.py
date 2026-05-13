@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Protocol
+from typing import Any, Protocol
 
 
 class BaseRoute(Protocol):
@@ -29,10 +29,10 @@ class BaseRoute(Protocol):
 
     @path.setter
     def path(self, v: str):
-        if v[0] is not '/':
+        if v[0] != '/':
             self.__path = f"/{v}"
         else:
             self.__path = v
 
     @abstractmethod
-    def endpoint(self): ...
+    def endpoint(self, *args, **kwargs) -> Any: ...
