@@ -23,19 +23,36 @@ class User(Base):
     role = relationship("Role", back_populates="users")
     user_profile = relationship("UserProfile", back_populates="users")
     user_credentials = relationship("UserCredentials", back_populates="users")
+    refresh_tokens = relationship("RefreshToken", back_populates="users")
     
     def __repr__(self):
         return f"<User(id={self.id}, login='{self.login}')>"
-    
-    def to_dict(self):
+
+    def __remove_none_values(self, data: dict):
+        new_data = {}
+        for k, v in data.items():
+                if v is not None:
+                    tmp = data.get(k)
+                    if tmp is not None:
+                        new_data.update({(k, tmp)})
+                else:
+                    continue
+        
+        return new_data
+
+    def to_dict(self, not_none=False):
         """Конвертация в словарь"""
         
         data = {
             'id': self.id,
-            'role': self.role.to_dict() if self.role else None,
-            'created_at': self.created_at.isoformat() if self.created_at else None, # pyright: ignore[reportGeneralTypeIssues]
+            'role_id': self.role_id,
+            'email': self.email,
+            'created_at': self.created_at.isoformat() if self.created_at is not None else None, 
             'is_active': self.is_active
         }
+
+        if not_none:
+            data = self.__remove_none_values(data)
         
         return data
     
