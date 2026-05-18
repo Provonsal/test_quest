@@ -1,3 +1,6 @@
+import os
+import sys
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -8,9 +11,16 @@ from fastapi import Depends
 
 from models import *
 
+from dotenv import load_dotenv
 
+load_dotenv()
 
-URL_DATABASE = DATABASE_URL = "postgresql+asyncpg://Provonsal:vkijlonmssf@127.0.0.1:5432/postgres"
+connect_url = os.getenv("DATABASE_URL")
+
+if connect_url is None:
+    raise Exception("No database url provided.")
+
+URL_DATABASE = DATABASE_URL = connect_url
 
 engine = create_async_engine(URL_DATABASE, echo=False)
 
