@@ -1,39 +1,64 @@
-<html>
-        <head>
-            <style>
-                body {
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    min-height: 100vh;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin: 0;
-                    padding: 20px;
-                }
-                .dashboard {
-                    background: white;
-                    border-radius: 20px;
-                    padding: 50px;
-                    text-align: center;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                }
-                h1 {
-                    color: #667eea;
-                    margin-bottom: 20px;
-                }
-                a {
-                    color: #764ba2;
-                    text-decoration: none;
-                    font-weight: 600;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="dashboard">
-                <h1>🎉 Добро пожаловать!</h1>
-                <p>Вы успешно авторизованы в системе.</p>
-                <a href="/">← Вернуться на главную</a>
-            </div>
-        </body>
-    </html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>🎉 Добро пожаловать!</h1>
+        
+        <div class="user-info">
+            <h2>Информация о пользователе</h2>
+            <p><strong>Имя:</strong> <span id="userName">Загрузка...</span></p>
+            <p><strong>Email:</strong> <span id="userEmail">Загрузка...</span></p>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">Выйти</button>
+    </div>
+    
+    <script src="/static/js/auth.js"></script>
+    <script>
+        function logout() {
+            removeTokens();
+            window.location.href = '/user/login';
+        }
+        
+        // Загружаем профиль при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadUserProfile);
+    </script>
+</body>
+</html>

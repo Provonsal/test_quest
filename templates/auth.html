@@ -236,7 +236,9 @@
 
         <div id="message" class="message"></div>
     </div>
-
+    
+    <script src="/static/js/auth.js"></script>
+    
     <script>
         // Переключение вкладок
         function switchTab(tab) {
@@ -285,60 +287,6 @@
         function validateName(name) {
             const re = /^[а-яёА-ЯЁa-zA-Z\s-]+$/;
             return re.test(name);
-        }
-
-        // Обработка входа
-        async function handleLogin(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('loginEmail');
-            const password = document.getElementById('loginPassword');
-            let isValid = true;
-
-            // Сброс ошибок
-            email.classList.remove('error');
-            password.classList.remove('error');
-
-            // Валидация
-            if (!validateEmail(email.value)) {
-                email.classList.add('error');
-                showMessage('Введите корректный email', 'error-message');
-                isValid = false;
-            }
-
-            if (password.value.length < 6) {
-                password.classList.add('error');
-                showMessage('Пароль должен содержать минимум 6 символов', 'error-message');
-                isValid = false;
-            }
-
-            if (isValid) {
-                try {
-                    const response = await fetch('/api/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: email.value,
-                            password: password.value
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        showMessage('Вход выполнен успешно!', 'success');
-                        setTimeout(() => {
-                            window.location.href = '/user/profile';
-                        }, 1000);
-                    } else {
-                        showMessage(data.detail || 'Ошибка входа', 'error-message');
-                    }
-                } catch (error) {
-                    showMessage('Ошибка соединения с сервером', 'error-message');
-                }
-            }
         }
 
         // Обработка регистрации
